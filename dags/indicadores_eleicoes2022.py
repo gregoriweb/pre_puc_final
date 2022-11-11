@@ -56,12 +56,6 @@ def s3_unzip (src_bucket: str, dst_bucket: str = '', dst_folder: str='raw', zipf
                     )
                     print('Uploaded file:', filenamezip)
 
-
-#s3_list_folder_content(bucket='prepuceleicoes2022', folder='landing/', maxitens=100, filetype='zip')
-
-
-
-
 client = boto3.client(
     'emr', region_name='us-east-2',
     aws_access_key_id=aws_access_key_id,
@@ -71,6 +65,15 @@ client = boto3.client(
 default_args = {
     'owner': 'Gregori',
     'start_date': datetime(2022, 11, 9)
+}
+
+unzip_args = {
+    'srcbucket': 'prepuceleicoes2022',
+    'srcfolder': 'landing/',
+    'dstbucket': 'prepuceleicoes2022',
+    'dstfolder': 'raw/',
+    'maxitens': 100,
+    'ext_exten': ('.csv')
 }
 
 @dag(default_args=default_args, schedule_interval="@once", description="Executa um job Spark no EMR", catchup=False, tags=['Spark','EMR'])
@@ -84,16 +87,11 @@ def indicadores_eleicoes2022():
 
     @task
     def unzip_raw():
-        zip_list = [
-            'landing/bweb_1t_AC_051020221321.zip',
-            'landing/bweb_1t_AL_051020221321.zip',
-            'landing/bweb_1t_AM_051020221321.zip'
-            #'landing/bweb_1t_ZZ_051020221321.zip'
-        ]
-        #zip_list = s3_list_folder_content(bucket='prepuceleicoes2022', folder='landing/', maxitens=100, filetype='zip')
-        #s3_unzip(src_bucket='prepuceleicoes2022', dst_folder='raw', zipfiles=['landing/bweb_1t_ZZ_051020221321.zip'], ext_extensions=('.csv'))
-        s3_unzip(src_bucket='prepuceleicoes2022', dst_folder='raw', zipfiles=zip_list, ext_extensions=('.csv'))
+        #zip_list = ['landing/bweb_1t_AC_051020221321.zip','landing/bweb_1t_AL_051020221321.zip','landing/bweb_1t_AM_051020221321.zip']      
+        zip_list = s3_list_folder_content(bucket=unzip_args.get('srcbucket'), folder=unzip_args.get('srcfolder'), maxitens=unzip_args.get('maxitens'), filetype='zip')
+        s3_unzip(src_bucket=unzip_args.get('srcbucket'), dst_folder=unzip_args.get('dstfolder'), zipfiles=zip_list, ext_extensions=unzip_args.get('ext_exten'))
         return ', '.join(zip_list)
+        
         
 
     @task
@@ -159,13 +157,8 @@ def indicadores_eleicoes2022():
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
                         'Args': ['spark-submit',
-#                                '--master', 'yarn',
                                 '--deploy-mode', 'cluster',
-                                #'--packages', 'io.delta:delta-core_2.12:2.1.0',
-                                #'--packages', 'org.apache.parquet:parquet-hadoop:1.12.0',
-                                #'s3://prepuceleicoes2022/pyscripts/pipe_1_unzip.py'
-                                #'s3://prepuceleicoes2022/pyscripts/pipe_2.py'
-                                's3://prepuceleicoes2022/pyscripts/pipe_3.py'
+                                's3://prepuceleicoes2022/pyscripts/Eleicoes2022_pipeline.py'
                                 ]
                     }
                 }
@@ -203,7 +196,7 @@ def indicadores_eleicoes2022():
 
     esperacluster = wait_emr_cluster(cluster)
 
-    indicadores = emr_process_eleicoes2022(cluster) 
+    indicadores = emr_process_eleicoes2022(cluster)
     esperacluster >> indicadores
 
     wait_step = wait_emr_job(cluster, indicadores)
