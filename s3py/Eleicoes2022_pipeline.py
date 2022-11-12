@@ -23,13 +23,13 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
 from pyspark.sql.window import Window as w
 
-spark = SparkSession.\
+spark = ( SparkSession.\
         builder.\
         appName("pyspark-notebook-eleicoes2022").\
-        master("spark://spark-master:7077").\
-        config("spark.executor.memory", "512m").\
+#        master("spark://spark-master:7077").\
+#        config("spark.executor.memory", "512m").\
         getOrCreate()
-
+)
 
 # ## 1 ler os arquivos raw e formatar o dataset completo à partir da pasta raw/eleicoes2022
 
