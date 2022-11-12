@@ -25,18 +25,22 @@ from pyspark.sql.window import Window as w
 
 spark = ( SparkSession.\
         builder.\
-#        appName("pyspark-notebook-eleicoes2022").\
+        appName("pyspark-eleicoes2022").\
 #        master("spark://spark-master:7077").\
 #        config("spark.executor.memory", "512m").\
         getOrCreate()
 )
 
+spark.sparkContext.setLogLevel("WARN")
+
 # ## 1 ler os arquivos raw e formatar o dataset completo à partir da pasta raw/eleicoes2022
 
-raw_folder_path = "raw/eleicoes2022"
+raw_folder_path = "s3://prepuceleicoes2022/raw/"
 raw_sep = ";"
 raw_header = True
 raw_enconding = "latin1"
+
+parquet_folder_path = "s3://prepuceleicoes2022/parquet/eleicoes2022/"
 
 data = spark.read.option("encoding", raw_enconding).csv(path=raw_folder_path, sep=raw_sep, header=raw_header)
 
@@ -59,14 +63,14 @@ data = (
     data
     .write
     .format('parquet')
-    .save("parquet/eleicoes2022")
+    .save(parquet_folder_path)
 )
 
 votosparquet = (
     spark
     .read
     #.parquet("s3://igti-ney-rais-prod-processing-zone-127012818163/rais/")
-    .parquet("parquet/eleicoes2022")
+    .parquet(parquet_folder_path)
 )
 
 # ### Candidatos do Segundo turno
