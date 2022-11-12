@@ -127,10 +127,10 @@ def indicadores_eleicoes2022():
                 'Ec2KeyName': 'gregori_pem',
                 'KeepJobFlowAliveWhenNoSteps': True,
                 'TerminationProtected': False,
-                'Ec2SubnetId': 'subnet-08c8ed6f8debf55ad'
+                'Ec2SubnetId': 'subnet-0c0fe84fea4012875'
             },
 
-            Applications=[{'Name': 'Spark'}],
+            Applications=[{'Name': 'Spark'}, {'Name': 'Jupyter'}],
         )
         return cluster_id["JobFlowId"]
 
