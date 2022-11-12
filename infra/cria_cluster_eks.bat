@@ -1,12 +1,12 @@
 eksctl create cluster ^
-    --version=1.21 ^
-    --name=kbgregori ^
-    --timeout=60m ^
-    --managed ^
-    --instance-types=m5.xlarge ^
-    --alb-ingress-access --node-private-networking ^
-    --region=us-east-2 ^
-    --nodes-min=2 --nodes-max=3 ^
-    --full-ecr-access ^
-    --asg-access ^
-    --nodegroup-name=ng-kbgregori
+--name=kbgregori3 ^
+--version=1.21 ^
+--managed ^
+--instance-types=m5.xlarge ^
+--alb-ingress-access --node-private-networking ^
+--region=us-east-2 ^
+--nodes-min=2 --nodes-max=3 ^
+--full-ecr-access ^
+--asg-access ^
+--nodegroup-name=ng-kbgregori3 ^
+--timeout=60m ^

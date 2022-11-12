@@ -29,12 +29,16 @@ def s3_list_folder_content (bucket: str, folder: str, filetype:str='*', maxitens
     return keyitens
 
 def s3_unzip (src_bucket: str, dst_bucket: str = '', dst_folder: str='raw', zipfiles:list=[], ext_extensions:tuple=('.csv'), maxitens:int=200):
+    
+    
     if dst_bucket == '':
         dst_bucket = src_bucket
 
+    if dst_folder.endswith('/'):
+        dst_folder = dst_folder[:-1]
     
     s3_resource = boto3.resource('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-
+    
     for filename in zipfiles:
         if (filename.endswith('.zip')):
             zip_obj = s3_resource.Object(bucket_name=src_bucket, key=filename)
