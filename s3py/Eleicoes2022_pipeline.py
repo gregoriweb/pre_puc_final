@@ -25,7 +25,7 @@ from pyspark.sql.window import Window as w
 
 spark = ( SparkSession.\
         builder.\
-        appName("pyspark-notebook-eleicoes2022").\
+#        appName("pyspark-notebook-eleicoes2022").\
 #        master("spark://spark-master:7077").\
 #        config("spark.executor.memory", "512m").\
         getOrCreate()
