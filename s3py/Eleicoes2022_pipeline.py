@@ -24,20 +24,22 @@ from pyspark.sql import functions as f
 from pyspark.sql.window import Window as w
 
 
-def write_parquet(data, folder):
-    (
-        data
+def write_parquet(df, folder):
+    data = (
+        df
         .write
         .format('parquet')
         .save(folder)
     )
+    return data
 
-def read_parquet(spark, folder):
-    (
-        spark
+def read_parquet(sp, folder):
+    spark = (
+        sp
         .read
         .parquet(folder)
     )
+    return spark
 
 
 spark = ( SparkSession.\
@@ -161,7 +163,7 @@ percVotosCandidatoUF1t = (
 parquet_folder_percVotosCandidatoUF1t = parquet_folder_path+'votospercVotosCandidatoUF1t/'
 write_parquet(data, parquet_folder_percVotosCandidatoUF1t)
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF1t)
-percVotosCandidatoUF1t.show()
+#percVotosCandidatoUF1t.show()
 
 # ###    4. Representação em % dos votos desses candidatos, dos votos brancos e dos votos nulos em cada UF (votos dos dois candidatos + votos brancos + votos nulos representam 100% dos votos de cada UF), no segundo turno
 
@@ -183,7 +185,7 @@ percVotosCandidatoUF2t = (
 parquet_folder_percVotosCandidatoUF2t = parquet_folder_path+'percVotosCandidatoUF2t/'
 write_parquet(data, parquet_folder_percVotosCandidatoUF2t)
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF2t)
-percVotosCandidatoUF2t.show()
+#percVotosCandidatoUF2t.show()
 
 # ###    5. Diferença entre os números de votos obtidos (votos segundo turno - votos primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
 
@@ -197,7 +199,7 @@ difVotosUFCandidato = (
 parquet_folder_difVotosUFCandidato = parquet_folder_path+'difVotosUFCandidato/'
 write_parquet(data, parquet_folder_difVotosUFCandidato)
 #read_parquet(spark, parquet_folder_difVotosUFCandidato)
-difVotosUFCandidato.show()
+#difVotosUFCandidato.show()
 
 # ###    6. Diferença % entre os valores % de votos (% segundo turno - % primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
 
