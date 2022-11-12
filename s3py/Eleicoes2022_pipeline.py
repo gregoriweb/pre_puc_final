@@ -23,6 +23,23 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
 from pyspark.sql.window import Window as w
 
+
+def write_parquet(data, folder):
+    (
+        data
+        .write
+        .format('parquet')
+        .save(folder)
+    )
+
+def read_parquet(spark, folder):
+    (
+        spark
+        .read
+        .parquet(folder)
+    )
+
+
 spark = ( SparkSession.\
         builder.\
         appName("pyspark-eleicoes2022").\
@@ -30,6 +47,7 @@ spark = ( SparkSession.\
 #        config("spark.executor.memory", "512m").\
         getOrCreate()
 )
+
 
 spark.sparkContext.setLogLevel("WARN")
 
@@ -59,23 +77,31 @@ data = (
 )
 
 # ## 2 transformar em parquet
-(
-    data
-    .write
-    .format('parquet')
-    .save(parquet_folder_path)
-)
 
-votosparquet = (
-    spark
-    .read
-    #.parquet("s3://igti-ney-rais-prod-processing-zone-127012818163/rais/")
-    .parquet(parquet_folder_path)
-)
+write_parquet(data, parquet_folder_path)
+# (
+#     data
+#     .write
+#     .format('parquet')
+#     .save(parquet_folder_path)
+# )
+
+votosparquet = read_parquet(spark, parquet_folder_path)
+# votosparquet = (
+#     spark
+#     .read
+#     #.parquet("s3://igti-ney-rais-prod-processing-zone-127012818163/rais/")
+#     .parquet(parquet_folder_path)
+# )
 
 # ### Candidatos do Segundo turno
 
 candidatos_2t = votosparquet.select('NM_VOTAVEL').where('NR_TURNO = 2').distinct()
+parquet_folder_candidatos_2t = parquet_folder_path+'candidatos_2t/'
+write_parquet(data, parquet_folder_candidatos_2t)
+#read_parquet(spark, parquet_folder_candidatos_2t)
+
+
 
 # ###     1. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no primeiro turno
 
@@ -93,7 +119,10 @@ votosUFCandidato1t = (
     .select('SG_UF', 'NM_VOTAVEL', 'VotosUFCandidato-1T' )
 )
 
-votosUFCandidato1t.show(n=1000)
+parquet_folder_votosUFCandidato1t = parquet_folder_path+'votosUFCandidato1t/'
+write_parquet(data, parquet_folder_votosUFCandidato1t)
+#read_parquet(spark, parquet_folder_votosUFCandidato1t)
+#votosUFCandidato1t.show(n=1000)
 
 # ###     2. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no segundo turno
 
@@ -106,8 +135,10 @@ votosUFCandidato2t = (
                  .where ('NR_TURNO = 2')
                  .select('SG_UF', 'NM_VOTAVEL', 'VotosUFCandidato-2T' )
             )
-
-votosUFCandidato2t.show(n=1000)
+parquet_folder_votosUFCandidato2t = parquet_folder_path+'votosUFCandidato2t/'
+write_parquet(data, parquet_folder_votosUFCandidato2t)
+#read_parquet(spark, parquet_folder_votosUFCandidato2t)
+#votosUFCandidato2t.show(n=1000)
 
 # ###    3. Representação em % dos votos desses candidatos, dos votos brancos e dos votos nulos em cada UF (votos dos dois candidatos + votos brancos + votos nulos representam 100% dos votos de cada UF), no primeiro turno
 
@@ -127,6 +158,9 @@ percVotosCandidatoUF1t = (
     
 )
 
+parquet_folder_percVotosCandidatoUF1t = parquet_folder_path+'votospercVotosCandidatoUF1t/'
+write_parquet(data, parquet_folder_percVotosCandidatoUF1t)
+#read_parquet(spark, parquet_folder_percVotosCandidatoUF1t)
 percVotosCandidatoUF1t.show()
 
 # ###    4. Representação em % dos votos desses candidatos, dos votos brancos e dos votos nulos em cada UF (votos dos dois candidatos + votos brancos + votos nulos representam 100% dos votos de cada UF), no segundo turno
@@ -146,6 +180,9 @@ percVotosCandidatoUF2t = (
         .select('SG_UF', 'NM_VOTAVEL', '`% Votos UF 2T`')
 )
 
+parquet_folder_percVotosCandidatoUF2t = parquet_folder_path+'percVotosCandidatoUF2t/'
+write_parquet(data, parquet_folder_percVotosCandidatoUF2t)
+#read_parquet(spark, parquet_folder_percVotosCandidatoUF2t)
 percVotosCandidatoUF2t.show()
 
 # ###    5. Diferença entre os números de votos obtidos (votos segundo turno - votos primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
@@ -157,6 +194,9 @@ difVotosUFCandidato = (
         #.select('SG_UF', 'NM_VOTAVEL', '`Dif. VotosUFCandidato`')
 )
 
+parquet_folder_difVotosUFCandidato = parquet_folder_path+'difVotosUFCandidato/'
+write_parquet(data, parquet_folder_difVotosUFCandidato)
+#read_parquet(spark, parquet_folder_difVotosUFCandidato)
 difVotosUFCandidato.show()
 
 # ###    6. Diferença % entre os valores % de votos (% segundo turno - % primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
@@ -167,10 +207,15 @@ difPercVotosCandidatoUF = (
         .withColumn('Dif. % Votos UF', f.col('% Votos UF 2T') - f.col('% Votos UF 1T'))
 )
 
-(difPercVotosCandidatoUF
-    .sort(f.col('`Dif. % Votos UF`').desc())
-    .show()
-)
+
+
+parquet_folder_difPercVotosCandidatoUF = parquet_folder_path+'difPercVotosCandidatoUF/'
+write_parquet(data, parquet_folder_difPercVotosCandidatoUF)
+#read_parquet(spark, parquet_folder_difPercVotosCandidatoUF)
+# (difPercVotosCandidatoUF
+#     .sort(f.col('`Dif. % Votos UF`').desc())
+#     .show()
+# )
 
 # ###    7. Junção das tabelas
 
@@ -178,7 +223,11 @@ tabela_final = (
     difVotosUFCandidato.join(difPercVotosCandidatoUF, ['SG_UF','NM_VOTAVEL'])
 )
 
-(tabela_final
+tabela_final = (
+    tabela_final
     .select('SG_UF','NM_VOTAVEL','VotosUFCandidato-1T','VotosUFCandidato-2T','`% Votos UF 1T`','`% Votos UF 2T`','`Dif. % Votos UF`','`Dif. VotosUFCandidato`')
-    .show()
 )
+
+parquet_folder_tabela_final = parquet_folder_path+'tabela_final/'
+write_parquet(data, parquet_folder_tabela_final)
+#read_parquet(spark, parquet_folder_tabela_final)
