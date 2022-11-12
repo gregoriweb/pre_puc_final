@@ -1,6 +1,6 @@
 # # Analises Finais:
 
-# Para candidatos que foram para o segundo turno, branco e nulos:
+# Para candidatos à presidencia que foram para o segundo turno, branco e nulos:
 # 
 #     1. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no primeiro turno
 #     2. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no segundo turno
@@ -17,6 +17,17 @@
 #     3. diferença % abstenção primeiro e segundo turno por cada UF
 # 
 
+# Codigos de cargos
+# +-----------------+-----------------+
+# |CD_CARGO_PERGUNTA|DS_CARGO_PERGUNTA|
+# +-----------------+-----------------+
+# |                5|          Senador|
+# |                6| Deputado Federal|
+# |                3|       Governador|
+# |                7|Deputado Estadual|
+# |                1|       Presidente|
+# +-----------------+-----------------+
+
 # ## Inicializar ambiente DEV
 
 from pyspark.sql import SparkSession
@@ -24,11 +35,11 @@ from pyspark.sql import functions as f
 from pyspark.sql.window import Window as w
 
 
-def write_parquet(df, folder):
+def write_parquet(df, folder, mode):
     data = (
         df
         .write
-        .mode('overwrite')
+        .mode(mode)
         .format('parquet')
         .save(folder)
     )
@@ -41,6 +52,18 @@ def read_parquet(sp, folder):
         .parquet(folder)
     )
     return spark
+
+
+overwrite_opt = True
+
+def get_writemode (overwrite:bool = False ):
+    if overwrite == False:
+        writemode = 'ignore'
+    if overwrite == True:
+        writemode = 'overwrite'
+    return writemode
+
+get_writemode(overwrite_opt)
 
 
 spark = ( SparkSession.\
@@ -77,11 +100,12 @@ data = (
         .withColumn("QT_ABSTENCOES", f.col("QT_ABSTENCOES").cast("int"))
         .withColumn("QT_VOTOS", f.col("QT_VOTOS").cast("int"))
         .withColumn("QT_ELEITORES_BIOMETRIA_NH", f.col("QT_ELEITORES_BIOMETRIA_NH").cast("int"))
+        .where ("CD_CARGO_PERGUNTA = 1")
 )
 
 # ## 2 transformar em parquet
 
-write_parquet(data, parquet_folder_path)
+write_parquet(data, parquet_folder_path, 'ignore')
 # (
 #     data
 #     .write
@@ -101,7 +125,7 @@ votosparquet = read_parquet(spark, parquet_folder_path)
 
 candidatos_2t = votosparquet.select('NM_VOTAVEL').where('NR_TURNO = 2').distinct()
 parquet_folder_candidatos_2t = parquet_folder_path+'candidatos_2t/'
-write_parquet(data, parquet_folder_candidatos_2t)
+write_parquet(candidatos_2t, parquet_folder_candidatos_2t, 'ignore')
 #read_parquet(spark, parquet_folder_candidatos_2t)
 
 
@@ -123,7 +147,7 @@ votosUFCandidato1t = (
 )
 
 parquet_folder_votosUFCandidato1t = parquet_folder_path+'votosUFCandidato1t/'
-write_parquet(data, parquet_folder_votosUFCandidato1t)
+write_parquet(votosUFCandidato1t, parquet_folder_votosUFCandidato1t, 'ignore')
 #read_parquet(spark, parquet_folder_votosUFCandidato1t)
 #votosUFCandidato1t.show(n=1000)
 
@@ -139,7 +163,7 @@ votosUFCandidato2t = (
                  .select('SG_UF', 'NM_VOTAVEL', 'VotosUFCandidato-2T' )
             )
 parquet_folder_votosUFCandidato2t = parquet_folder_path+'votosUFCandidato2t/'
-write_parquet(data, parquet_folder_votosUFCandidato2t)
+write_parquet(votosUFCandidato2t, parquet_folder_votosUFCandidato2t, 'ignore')
 #read_parquet(spark, parquet_folder_votosUFCandidato2t)
 #votosUFCandidato2t.show(n=1000)
 
@@ -162,7 +186,7 @@ percVotosCandidatoUF1t = (
 )
 
 parquet_folder_percVotosCandidatoUF1t = parquet_folder_path+'votospercVotosCandidatoUF1t/'
-write_parquet(data, parquet_folder_percVotosCandidatoUF1t)
+write_parquet(percVotosCandidatoUF1t, parquet_folder_percVotosCandidatoUF1t, 'ignore')
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF1t)
 #percVotosCandidatoUF1t.show()
 
@@ -184,7 +208,7 @@ percVotosCandidatoUF2t = (
 )
 
 parquet_folder_percVotosCandidatoUF2t = parquet_folder_path+'percVotosCandidatoUF2t/'
-write_parquet(data, parquet_folder_percVotosCandidatoUF2t)
+write_parquet(percVotosCandidatoUF2t, parquet_folder_percVotosCandidatoUF2t, 'ignore')
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF2t)
 #percVotosCandidatoUF2t.show()
 
@@ -198,7 +222,7 @@ difVotosUFCandidato = (
 )
 
 parquet_folder_difVotosUFCandidato = parquet_folder_path+'difVotosUFCandidato/'
-write_parquet(data, parquet_folder_difVotosUFCandidato)
+write_parquet(difVotosUFCandidato, parquet_folder_difVotosUFCandidato, 'ignore')
 #read_parquet(spark, parquet_folder_difVotosUFCandidato)
 #difVotosUFCandidato.show()
 
@@ -213,7 +237,7 @@ difPercVotosCandidatoUF = (
 
 
 parquet_folder_difPercVotosCandidatoUF = parquet_folder_path+'difPercVotosCandidatoUF/'
-write_parquet(data, parquet_folder_difPercVotosCandidatoUF)
+write_parquet(difPercVotosCandidatoUF, parquet_folder_difPercVotosCandidatoUF, 'ignore')
 #read_parquet(spark, parquet_folder_difPercVotosCandidatoUF)
 # (difPercVotosCandidatoUF
 #     .sort(f.col('`Dif. % Votos UF`').desc())
@@ -232,5 +256,5 @@ tabela_final = (
 )
 
 parquet_folder_tabela_final = parquet_folder_path+'tabela_final/'
-write_parquet(data, parquet_folder_tabela_final)
+write_parquet(tabela_final, parquet_folder_tabela_final, 'ignore')
 #read_parquet(spark, parquet_folder_tabela_final)
