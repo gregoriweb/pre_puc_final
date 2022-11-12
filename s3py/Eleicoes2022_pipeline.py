@@ -63,8 +63,6 @@ def get_writemode (overwrite:bool = False ):
         writemode = 'overwrite'
     return writemode
 
-get_writemode(overwrite_opt)
-
 
 spark = ( SparkSession.\
         builder.\
@@ -105,7 +103,7 @@ data = (
 
 # ## 2 transformar em parquet
 
-write_parquet(data, parquet_folder_path, 'ignore')
+write_parquet(data, parquet_folder_path, get_writemode(overwrite_opt))
 # (
 #     data
 #     .write
@@ -125,7 +123,7 @@ votosparquet = read_parquet(spark, parquet_folder_path)
 
 candidatos_2t = votosparquet.select('NM_VOTAVEL').where('NR_TURNO = 2').distinct()
 parquet_folder_candidatos_2t = parquet_folder_path+'candidatos_2t/'
-write_parquet(candidatos_2t, parquet_folder_candidatos_2t, 'ignore')
+write_parquet(candidatos_2t, parquet_folder_candidatos_2t, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_candidatos_2t)
 
 
@@ -147,7 +145,7 @@ votosUFCandidato1t = (
 )
 
 parquet_folder_votosUFCandidato1t = parquet_folder_path+'votosUFCandidato1t/'
-write_parquet(votosUFCandidato1t, parquet_folder_votosUFCandidato1t, 'ignore')
+write_parquet(votosUFCandidato1t, parquet_folder_votosUFCandidato1t, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_votosUFCandidato1t)
 #votosUFCandidato1t.show(n=1000)
 
@@ -163,7 +161,7 @@ votosUFCandidato2t = (
                  .select('SG_UF', 'NM_VOTAVEL', 'VotosUFCandidato-2T' )
             )
 parquet_folder_votosUFCandidato2t = parquet_folder_path+'votosUFCandidato2t/'
-write_parquet(votosUFCandidato2t, parquet_folder_votosUFCandidato2t, 'ignore')
+write_parquet(votosUFCandidato2t, parquet_folder_votosUFCandidato2t, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_votosUFCandidato2t)
 #votosUFCandidato2t.show(n=1000)
 
@@ -186,7 +184,7 @@ percVotosCandidatoUF1t = (
 )
 
 parquet_folder_percVotosCandidatoUF1t = parquet_folder_path+'votospercVotosCandidatoUF1t/'
-write_parquet(percVotosCandidatoUF1t, parquet_folder_percVotosCandidatoUF1t, 'ignore')
+write_parquet(percVotosCandidatoUF1t, parquet_folder_percVotosCandidatoUF1t, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF1t)
 #percVotosCandidatoUF1t.show()
 
@@ -208,7 +206,7 @@ percVotosCandidatoUF2t = (
 )
 
 parquet_folder_percVotosCandidatoUF2t = parquet_folder_path+'percVotosCandidatoUF2t/'
-write_parquet(percVotosCandidatoUF2t, parquet_folder_percVotosCandidatoUF2t, 'ignore')
+write_parquet(percVotosCandidatoUF2t, parquet_folder_percVotosCandidatoUF2t, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_percVotosCandidatoUF2t)
 #percVotosCandidatoUF2t.show()
 
@@ -222,7 +220,7 @@ difVotosUFCandidato = (
 )
 
 parquet_folder_difVotosUFCandidato = parquet_folder_path+'difVotosUFCandidato/'
-write_parquet(difVotosUFCandidato, parquet_folder_difVotosUFCandidato, 'ignore')
+write_parquet(difVotosUFCandidato, parquet_folder_difVotosUFCandidato, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_difVotosUFCandidato)
 #difVotosUFCandidato.show()
 
@@ -237,7 +235,7 @@ difPercVotosCandidatoUF = (
 
 
 parquet_folder_difPercVotosCandidatoUF = parquet_folder_path+'difPercVotosCandidatoUF/'
-write_parquet(difPercVotosCandidatoUF, parquet_folder_difPercVotosCandidatoUF, 'ignore')
+write_parquet(difPercVotosCandidatoUF, parquet_folder_difPercVotosCandidatoUF, get_writemode(overwrite_opt))
 #read_parquet(spark, parquet_folder_difPercVotosCandidatoUF)
 # (difPercVotosCandidatoUF
 #     .sort(f.col('`Dif. % Votos UF`').desc())
