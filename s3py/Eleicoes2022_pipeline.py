@@ -28,6 +28,7 @@ def write_parquet(df, folder):
     data = (
         df
         .write
+        .mode('overwrite')
         .format('parquet')
         .save(folder)
     )
