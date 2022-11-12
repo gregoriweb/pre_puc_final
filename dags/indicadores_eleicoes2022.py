@@ -194,7 +194,7 @@ def indicadores_eleicoes2022():
     # Orquestração
     tarefainicial = tarefa_inicial()
     cluster = emr_create_cluster()
-    unzip = unzip_raw()
+    #unzip = unzip_raw()
     
     #inicio >> tarefainicial >> unzip >> cluster
     inicio >> tarefainicial >> cluster
