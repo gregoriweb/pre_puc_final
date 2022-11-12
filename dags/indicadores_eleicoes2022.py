@@ -105,7 +105,7 @@ def indicadores_eleicoes2022():
             ServiceRole='EMR_DefaultRole',
             JobFlowRole='EMR_EC2_DefaultRole',
             VisibleToAllUsers=True,
-            LogUri='s3://prepuceleicoes2022/aws_logs/',
+            LogUri='s3://prepuceleicoes2022/Automated_EMR_Gregori_logs/',
             ReleaseLabel='emr-6.8.0',
             Instances={
                 'InstanceGroups': [
@@ -127,7 +127,7 @@ def indicadores_eleicoes2022():
                 'Ec2KeyName': 'gregori_pem',
                 'KeepJobFlowAliveWhenNoSteps': True,
                 'TerminationProtected': False,
-                'Ec2SubnetId': 'subnet-0b7470084b1757de7'
+                'Ec2SubnetId': 'subnet-08c8ed6f8debf55ad'
             },
 
             Applications=[{'Name': 'Spark'}],
@@ -196,7 +196,8 @@ def indicadores_eleicoes2022():
     cluster = emr_create_cluster()
     unzip = unzip_raw()
     
-    inicio >> tarefainicial >> unzip >> cluster
+    #inicio >> tarefainicial >> unzip >> cluster
+    inicio >> tarefainicial >> cluster
 
     esperacluster = wait_emr_cluster(cluster)
 
