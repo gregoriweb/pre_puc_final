@@ -130,7 +130,7 @@ def indicadores_eleicoes2022():
                 'Ec2SubnetId': 'subnet-0c0fe84fea4012875'
             },
 
-            Applications=[{'Name': 'Spark'}, {'Name': 'Jupyter'}],
+            Applications=[{'Name': 'Spark'}, {'Name': 'JupyterEnterpriseGateway'}],
         )
         return cluster_id["JobFlowId"]
 
