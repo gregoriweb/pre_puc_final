@@ -111,6 +111,11 @@ helm install airflow apache-airflow/airflow ^
  Preencher `password` com secret-access-key do usuário `airflow-user`
 
 
+# Deploy Dag
+
+* Push do codigo para o GitHub
+
+* Verificar a subnet para o emr
 
 
 
