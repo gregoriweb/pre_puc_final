@@ -116,62 +116,6 @@ helm install airflow apache-airflow/airflow ^
 * Push do codigo para o GitHub
 
 * Verificar a subnet para o emr
-
-
-
-## 1. Deploy cluster K8s na AWS (EKS)
-
-# Deletar o cluster 
-  - Antes deletar o loadbalancer 
-      Buscar svcs
-      `kubectl get svc -n namespace` ou `kubectl get svc --all-namespaces`
-      Deletar svc loadbalance (com ipexterno)
-      `kubectl delete svc airflow-webserver -n airflow16`
-    
-    Ou
-
-      Deletar o helm
-      `helm delete airflow --namespace airflow`
-
-  - Remover o cluster
-    `eksctl delete cluster --region=us-east-2 --name=kbgregori`
-
-# Show namespaces
-`kubectl get ns`
-
-# Show kubernetes contexts 
-`kubectl.exe config get-contexts`
-
-# show current context
-`kubectl config current-context`
-
-# Swith kubernetes contexts 
-`kubectl config use-context airflow-user@kbgregori2.us-east-2.eksctl.io`
-
-# Show cluster pods, svc, pvc no namespace airflow
-`kubectl get pods,svc,pvc -n airflow`
-
-# Show svcs para depois deletar os loadbalancers antes de derrubar o cluster
-`kubectl get svc --all-namespaces`
-
-# Gerar yaml helm
-`helm show values apache-airflow/airflow >> custom_values.yaml`
-
-
-
-# Deletar helm
-`helm delete airflow --namespace airflow`
-
-
-
-# Configuração do Airflow pos deploy
-    1- Trocar senha no profile
-    2- setar as varíaveies de ambiente (access-key-id, secret-access-key)
-    3- Configurar my-aws para o RemoteLog
-      1- Admin/Connections
-      2- Preencher Connection Id com `my_aws`
-      3- Connection Type = `Amazon Web Services`
-      4- Login com access-key-id do usuário e password com secret-access-key do usuário
     
 
 ## Problemas
@@ -195,7 +139,6 @@ helm install airflow apache-airflow/airflow ^
     Testei testei tanto usando o hc 1.7.0 e 1.6.0, ambos
     funcionaram usando o .yaml do professor.
     
-
     Obs:
     Tentei rodar hc install com meu .yaml na versão k8s 1.21 e também não funcinou.
     Não gerei .yaml com a versão 1.6.0 do hc, nem comparei os arquivos
