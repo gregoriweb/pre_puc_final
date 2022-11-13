@@ -65,6 +65,13 @@ eksctl create cluster ^
     (não usar senha verdadeira, atualizar depois)
 
 ## 3. Instalar o Airflow no kubernetes com o Helm Chart
+
+## 1. Baixar o Helm do Airflow para a máquina:
+
+`helm repo add apache-airflow https://airflow.apache.org`
+
+## 2. Realizar a instalação do Airflow:
+
 ```bat
 @echo Inicio: %date% %time%
 helm install airflow apache-airflow/airflow ^
