@@ -3,6 +3,7 @@ teste 1 - K8s 1.2.1, helm chart 1.7.0, arquivo ney, funcionou
 
 	kubectl get svc -n airflow-170-gregori
 
+
 # Deploy EKS - Cluster de máquinas Kubernetes 
 `eksctl create cluster ^
     --version=1.21 ^
@@ -59,15 +60,4 @@ teste 1 - K8s 1.2.1, helm chart 1.7.0, arquivo ney, funcionou
 
 # Deletar helm
 `helm delete airflow --namespace airflow`
-
-
-
-# Configuração do Airflow pos deploy
-    1- Trocar senha no profile
-    2- setar as varíaveies de ambiente (access-key-id, secret-access-key)
-    3- Configurar my-aws para o RemoteLog
-      1- Admin/Connections
-      2- Preencher Connection Id com `my_aws`
-      3- Connection Type = `Amazon Web Services`
-      4- Login com access-key-id do usuário e password com secret-access-key do usuário
     
