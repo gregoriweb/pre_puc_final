@@ -8,22 +8,20 @@
 * **Instalar Helm**
 * **Instalar eksctl**
 * **Instalar awscli**\
-	Linha de comando para autenticar na aws\
-    aws --version para mostrar versão
+    Linha de comando para autenticar na aws\
+    `aws --version para mostrar versão`
 	 
 ## Pré-requisitos configuração AWS
 * **IAM**\
     Criar o usuário `airflow-user` para utilização dos recuros AWS\
 	Chaves de acesso: Access Key ID e Secret Access Key em Security Credentials\
-    Setar as devidas permissões do usuário
+    Setar as devidas permissões do usuário `airflow-user` no AWS 
 
 * **awscli**\
-  rodar “aws configure” para criar conexão com a aws\
-	Preencher AWS Access Key ID e Secret Access Key do usuário\
+  rodar `aws configure` para criar conexão com a aws\
+	Preencher AWS Access Key ID e Secret Access Key do usuário `airflow-user`\
 	Definir default region: us-east-2\
 	Definir Default output: json
-
-
 
 # Implementação Airflow/Kubernetes
 ## 1. Deploy cluster K8s na AWS (EKS) 
@@ -43,7 +41,7 @@ eksctl create cluster ^
     --nodegroup-name=ng-kbgregori
 ```
 >   Só funcionou com a opção `--version=1.21`.
->   Para quebrar linhas em unix tracar `^` por `\`
+>   Para quebrar linhas em unix trocar `^` por `\`
 
 ## 2. Atualizar o .yaml do professor com os dados corretos
 
@@ -58,10 +56,25 @@ eksctl create cluster ^
 ```
 
 * **Git Sync:**\
+
     Atualizar o repositório das dags
 
 * **Web Server - DefaulUser**:\
     Atualizar as informações de usuário admin\
+    
+    ```yaml
+    ...
+    # Create initial user.
+    defaultUser:
+        enabled: true
+        role: Admin
+        username: gregori
+        email: gregori@email.com
+        firstName: Gregori
+        lastName: P
+        password: admin
+    ...
+    ```
     (não usar senha verdadeira, atualizar depois)
 
 ## 3. Instalar o Airflow no kubernetes com o Helm Chart
