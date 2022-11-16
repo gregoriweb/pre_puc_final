@@ -1,6 +1,7 @@
 # Prints:
-* [Aiflow GRID](./blob/main/prints/aws_s3_1.png)
 * [Aiflow GRID](./prints/airflow_grid.png)
+* [Notebook SHOW](./prints/notebook_show_4.png)
+* [Outros Prints](./prints)
 
 
 # Análises realizadas:
