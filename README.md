@@ -1,3 +1,8 @@
+# Prints:
+* [Aiflow GRID](./blob/main/prints/aws_s3_1.png)
+* [Aiflow GRID](./prints/airflow_grid.png)
+
+
 # Análises realizadas:
 ## Para candidatos à Presidencia que foram para o segundo turno, para votos brancos e votos nulos, no pleito 2022:
 
