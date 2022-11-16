@@ -1,5 +1,5 @@
 # Análises realizadas:
-## Para candidatos à presidencia que foram para o segundo turno, branco e nulos:
+## Para candidatos à Presidencia que foram para o segundo turno, para votos brancos e votos nulos, no pleito 2022:
 
 1. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no primeiro turno
 2. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no segundo turno
