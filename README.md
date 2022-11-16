@@ -1,3 +1,17 @@
+# Análises realizadas:
+## Para candidatos à presidencia que foram para o segundo turno, branco e nulos:
+
+1. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no primeiro turno
+2. Número de Votos dos candidatos que foram ao segundo turno; número de votos brancos e número de votos nulos, todos por UF, no segundo turno
+
+3. Representação em % dos votos desses candidatos, dos votos brancos e dos votos nulos em cada UF (votos dos dois candidatos + votos brancos + votos nulos representando 100% dos votos de cada UF), no primeiro turno
+4. Representação em % dos votos desses candidatos, dos votos brancos e dos votos nulos em cada UF (votos dos dois candidatos + votos brancos + votos nulos representando 100% dos votos de cada UF), no primeiro turno
+
+5. Diferença entre os números de votos obtidos (votos segundo turno - votos primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
+6. Diferença % entre os valores % de votos (% segundo turno - % primeiro turno ) para cada um dos candidatos, para os votos nulos e para os votos brancos, por UF 
+
+
+
 # Anotações Desafio Final Ney
 
 # Pré-requisitos
